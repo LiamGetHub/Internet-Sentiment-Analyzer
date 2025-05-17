@@ -1,3 +1,5 @@
+import schedule
+import time
 from crawler import crawl_site
 from analyzer import get_page_text, analyze_sentiment
 from logger import log_sweep_result
@@ -8,7 +10,6 @@ seed_sites = [
     "https://www.nytimes.com",
     "https://www.foxnews.com",
     "https://www.nbcnews.com",
-    "https://www.washingtonpost.com",
     "https://www.cbsnews.com",
     "https://www.economist.com",
 ]
@@ -38,4 +39,18 @@ def run_sweep():
     log_sweep_result(site_sentiments, overall_avg)
 
 if __name__ == "__main__":
+    # Run once immediately
     run_sweep()
+
+
+# You can replace schedule.every(1).hour with:
+# schedule.every().day.at("08:00")
+# schedule.every(10).minutes
+# schedule.every().monday.at("09:00")
+
+    # Schedule to run every hour (or adjust to `.day.at("08:00")`, etc.)
+    schedule.every(20).minutes.do(run_sweep)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(10)
